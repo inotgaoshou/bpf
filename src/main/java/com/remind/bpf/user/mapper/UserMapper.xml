@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.remind.bpf.user.mapper.UserMapper">
+
+	<resultMap type="User" id="userResultMap">
+		<id property="id" column="id"/>
+		<result property="user_name" column="USER_NAME"/>
+		<result property="login_name" column="LOGIN_NAME"/>
+		<result property="login_diyname" column="LOGIN_DIYNAME"/>
+		<result property="password" column="PASSWORD"/>
+
+		<result property="email" column="EMAIL"/>
+		<result property="msisdn" column="MSISDN"/>
+		<result property="telphone" column="TELPHONE"/>
+		<result property="def_menu_id" column="def_menu_id"/>
+		<result property="company_name" column="company_name"/>
+		<result property="prov_code" column="prov_code"/>
+		<result property="city_code" column="city_code"/>
+		<result property="type" column="type"/>
+		<result property="grade" column="grade"/>
+		<result property="locked" column="locked"/>
+		<result property="error_count" column="error_count"/>
+		<result property="login_date" column="login_date"/>
+		<result property="current_date" column="current_date"/>
+		<result property="created_by" column="created_by"/>
+		<result property="status" column="status"/>
+		<result property="last_upd" column="last_upd"/>
+		<result property="last_upd_by" column="last_upd_by"/>
+		<result property="remarks" column="remarks"/>
+	</resultMap>
+	
+	
+	
+<!-- 		<insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="id"  keyColumn="id"> -->
+<!-- 	        INSERT INTO user (username,password,email) -->
+<!-- 	        VALUE (#{username}, #{password}, #{email}) -->
+<!-- 	        <selectKey keyProperty="id" resultType="long" order="AFTER"> -->
+<!-- 	            SELECT LAST_INSERT_ID(); -->
+<!-- 	        </selectKey> -->
+<!--     </insert> -->
+	<insert id="insertUser" parameterType="User">
+	   <selectKey  keyProperty="id" resultType="long" order="BEFORE">
+			<![CDATA[select func_bpf_getseq('WM_USER') as id from dual]]>
+	   </selectKey>
+	   
+		<![CDATA[
+			INSERT INTO WM_USER(ID, USER_NAME, LOGIN_NAME,password)
+	        VALUES( #{id}, #{user_name}, #{login_name},#{password})
+		]]>
+    </insert>
+    
+      
+    
+    <select id="getUserList" resultMap="userResultMap">
+    		<![CDATA[ 
+   				select * from user 
+    		]]>
+    </select>
+	
+	
+</mapper>

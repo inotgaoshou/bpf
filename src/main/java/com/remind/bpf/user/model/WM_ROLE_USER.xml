@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="com.remind.bpf.user.model.wm_role_user">
+	
+	<typeAlias alias="wm_role_user" type="com.remind.bpf.user.model.WM_ROLE_USER" />
+	
+	<insert id="insert_WM_ROLE_USER" parameterClass="wm_role_user">
+		<![CDATA[
+			INSERT INTO WM_ROLE_USER(ID, ROLE_ID, USER_ID, CREATED, CREATED_BY, STATUS, LAST_UPD, LAST_UPD_BY, REMARKS) 
+			VALUES( #{id$}, #{role_id$}, #{user_id$}, current_date, #{created_by$}, #{status$}, #{last_upd$}, #{last_upd_by$}, #{remarks$} )
+		]]>
+	</insert>
+		
+	<update id="updateAll_WM_ROLE_USER" parameterClass="wm_role_user">
+		<![CDATA[ 
+			UPDATE WM_ROLE_USER SET LAST_UPD = current_date,
+			ID = #id#, ROLE_ID = #role_id#, USER_ID = #user_id#, STATUS = #status#, LAST_UPD_BY = #last_upd_by#, REMARKS = #remarks# 
+			WHERE 1 = 1 AND ID = #id#
+		]]>
+	</update>
+	
+	<update id="updateNotNull_WM_ROLE_USER" parameterClass="wm_role_user">
+		<![CDATA[ UPDATE WM_ROLE_USER SET LAST_UPD = current_date ]]>
+			<isNotNull property="id">
+				<![CDATA[, ID = #id#]]>
+			</isNotNull>
+			<isNotNull property="role_id">
+				<![CDATA[, ROLE_ID = #role_id#]]>
+			</isNotNull>
+			<isNotNull property="user_id">
+				<![CDATA[, USER_ID = #user_id#]]>
+			</isNotNull>
+			<isNotNull property="created">
+				<![CDATA[, CREATED = #created#]]>
+			</isNotNull>
+			<isNotNull property="created_by">
+				<![CDATA[, CREATED_BY = #created_by#]]>
+			</isNotNull>
+			<isNotNull property="status">
+				<![CDATA[, STATUS = #status#]]>
+			</isNotNull>
+
+			<isNotNull property="last_upd_by">
+				<![CDATA[, LAST_UPD_BY = #last_upd_by#]]>
+			</isNotNull>
+			<isNotNull property="remarks">
+				<![CDATA[, REMARKS = #remarks#]]>
+			</isNotNull>
+		<![CDATA[ WHERE 1 = 1 AND ID = #id# ]]>
+	</update>
+	
+	<select id="query_WM_ROLE_USER" resultClass="wm_role_user" parameterClass="wm_role_user">
+		<![CDATA[ SELECT ID, ROLE_ID, USER_ID, CREATED, CREATED_BY, STATUS, LAST_UPD, LAST_UPD_BY, REMARKS FROM WM_ROLE_USER WHERE 1 = 1 ]]>
+		<dynamic>
+			<isNotNull prepend="AND" property="id">
+				<![CDATA[ ID = #id# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="role_id">
+				<![CDATA[ ROLE_ID = #role_id# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="user_id">
+				<![CDATA[ USER_ID = #user_id# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="created">
+				<![CDATA[ CREATED = #created# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="created_by">
+				<![CDATA[ CREATED_BY = #created_by# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="status">
+				<![CDATA[ STATUS = #status# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="last_upd">
+				<![CDATA[ LAST_UPD = #last_upd# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="last_upd_by">
+				<![CDATA[ LAST_UPD_BY = #last_upd_by# ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="remarks">
+				<![CDATA[ REMARKS = #remarks# ]]>
+			</isNotNull>
+		</dynamic>
+	</select>
+    
+</sqlMap>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- Connection Info -->
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		 <!-- Connection Pooling DBCP -->
+        <property name="initialSize" value="${dbcp.initialSize}" />
+        <property name="maxActive" value="${dbcp.initialSize}" />
+        <property name="maxIdle" value="${dbcp.maxIdle}" />
+        <property name="maxWait" value="${dbcp.maxWait}" />
+        <property name="poolPreparedStatements" value="${dbcp.poolPreparedStatements}" />
+        <property name="defaultAutoCommit" value="${dbcp.defaultAutoCommit}" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlSessionFactory"  class="org.mybatis.spring.SqlSessionFactoryBean">  
+       <property name="dataSource" ref="dataSource" />  
+       <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+       <property name="typeAliasesPackage" value="com.remind.bpf.user.model" />  
+    </bean>  
+   
+     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+       <property name="basePackage" value="com.remind.bpf.*.mapper" />  
+       <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>  
+	
+	
+	 <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED"  />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="get*"  read-only="true"/>
+            <tx:method name="find*" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config >
+        <aop:pointcut id="allManagerMethod"
+            expression="execution(* com.remind.bpf.*.service.*.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod" />
+    </aop:config>
+  
+	<!-- scan for mappers and will automatically scan the whole classpath for xmls -->
+	<!-- 	<mybatis:scan base-package="com.ericsson.demo.mapper" factory-ref="sqlSessionFactory" /> -->
+  	<!-- scan for mappers and let them be autowired -->
+<!-- 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> -->
+<!-- 	 <property name="sqlSessionFactory"  ref="sqlSessionFactory"/>   -->
+<!-- 		<property name="basePackage" value="com.ericsson.demo.mapper" /> -->
+<!-- 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> -->
+<!-- 	</bean> -->
+
+	
+	
+</beans>
